@@ -1,0 +1,19 @@
+[
+  {"phrase": "接手这个项目看看该怎么弄", "should_activate": true},
+  {"phrase": "接手一个陌生仓库，先搞清楚它长什么样", "should_activate": true},
+  {"phrase": "接着上次那个继续，换我来接手", "should_activate": true},
+  {"phrase": "这个项目交给你了，你先读一遍", "should_activate": true},
+  {"phrase": "旧项目接手怎么上手", "should_activate": true},
+  {"phrase": "项目认知索引怎么用", "should_activate": true},
+  {"phrase": "给这个项目建一份代码索引地图", "should_activate": true},
+  {"phrase": "上下文压缩了，AI 把项目忘光了，重新理解一下", "should_activate": true},
+  {"phrase": "怎么让 AI 记住整个项目不用每次重读", "should_activate": true},
+  {"phrase": "aoci-code 的刷新时机是什么时候", "should_activate": true},
+  {"phrase": "帮我写一个 MCP 服务器", "should_activate": false},
+  {"phrase": "把需求拆成任务排个期", "should_activate": false},
+  {"phrase": "审查一下这个 PR 有没有安全问题", "should_activate": false},
+  {"phrase": "用 Tabbit 打开这个页面截个图", "should_activate": false},
+  {"phrase": "帮我建一个 Android 新工程", "should_activate": false},
+  {"phrase": "把这个 B 站视频讲的内容提取出来", "should_activate": false},
+  {"phrase": "读一下这个项目并生成一份完整的项目文档", "should_activate": false}
+]
