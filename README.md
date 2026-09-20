@@ -240,7 +240,7 @@ python <skill_dir>/scripts/anysearch_cli.py search "关键词" --max_results 5
 
 | 内容 | 行数 | 实测 token |
 |---|---|---|
-| `prompt/Luzzy.md` | 1,374 | 35,972 |
+| `prompt/Luzzy.md` | 1,374 | 35,973 |
 | └ 其中 `〇 · 身份与使命`（人设层） | 78 | ~2,200 |
 | `skills/`（26 个技能，**按需加载，不常驻**） | 9,176 | — |
 
