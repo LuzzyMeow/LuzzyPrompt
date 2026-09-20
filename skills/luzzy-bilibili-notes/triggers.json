@@ -5,6 +5,8 @@
   {"phrase": "帮我把这个视频转成文字", "should_activate": true},
   {"phrase": "抓这个视频的字幕", "should_activate": true},
   {"phrase": "帮我看看这个视频讲了什么", "should_activate": true},
+  {"phrase": "读一下这个视频", "should_activate": true},
+  {"phrase": "帮我读读这个视频讲了啥，不用写文件", "should_activate": true},
   {"phrase": "bilibili 视频 笔记", "should_activate": true},
   {"phrase": "BV1xx411c7mD 这个视频讲了啥", "should_activate": true},
   {"phrase": "提取 https://b23.tv/abcdefg 的内容", "should_activate": true},

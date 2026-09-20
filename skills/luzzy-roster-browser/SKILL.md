@@ -71,6 +71,7 @@ metadata:
 | `nodejs --task N --request-id ID [--read-only]` | 提交 Playwright 程序（从 stdin 读 JS） |
 | `resource --task N --resource ID --offset 0` | 读超过 16 KiB 的结果分片 |
 | `finish --task N` | 收尾：释放占用、保留有用的标签组 |
+| `finish --task N --discard` | 收尾并**关闭任务自有的全部标签页**（任务创建的 + 被 `claim` / `resume` 接管的） |
 
 **执行纪律**：
 
@@ -79,8 +80,51 @@ metadata:
 - **`--read-only` 只声明不改状态**：读标题、读文本算只读；导航、点击、填表都不算
 - **一次程序内完成**：导航 + 提取 + 验证写在一个程序里，不要一次一个字段地反复探测
 - **临时标签页在 `finally` 里关**：只关本任务创建的；**绝不关用户的已接管标签页**
-- **收尾 `finish` 恰好一次**
+- **收尾 `finish` 恰好一次**——要清干净就用 `--discard`
 - **Windows 传多行 JS**：写 UTF-8 临时文件 + `cmd /d /c "... < 文件"` 重定向；**不用** PowerShell 管道与 here-string（会改写换行与编码）
+
+### 标签页与进程生命周期（实测结论）
+
+**问题**：Agent 用浏览器时会打开一个标签页，用户希望任务结束后它自己消失，且不碰用户原有的标签页。
+
+**实测条件**：Tabbit 正在运行，用户自己有 2 个标签页（`state=available`，`group=null`）。
+
+| 阶段 | 观测 |
+|---|---|
+| 任务运行中 | 清单 3 页：用户 2 页（`available`）+ 任务 1 页（`owned`，属任务组）；`oneGroupPerTask: true` |
+| `finish --task N --discard` 后 | 用户两页**原样保留**（tabId / windowId 均未变）；`taskCount: 0`、`activeTaskCount: 0`、`occupiedTaskCount: 0` |
+
+**三条结论**：
+
+1. **能关掉自己开的标签页**——用 `finish --task N --discard`。所有权模型保证只关任务自有的
+2. **能不碰用户标签页**——只有 `claimed` / `resumed` / `task-created` 的页进入 Agent 可见范围
+   （`contextContainsOnlyOwnedTabs: true`）；`finish` 只释放本任务所有权
+3. **不能让浏览器进程消失**——launcher 的语义是「需要时拉起浏览器」；CLI 命令面只有
+   `finish, tabs, claim, resume, nodejs, receipt, resource, diagnose`，**没有退出命令**。
+   硬杀进程可能损坏 profile、丢用户会话，官方也要求浏览器生命周期由浏览器自己管
+
+**因此收尾按这三步**：
+
+```text
+1. finish --task N --discard          # 关掉任务自有的标签页（恰好一次）
+2. 清掉 cookie / 截图 / 下载物等临时产物
+3. 浏览器是被本次任务拉起的（任务开始前没开着）→ 如实报告并询问用户是否关掉浏览器
+   否则 → 什么都不说，用户自己的浏览器维持原样
+```
+
+**四条禁止**：
+
+- 不要去关用户自己的标签页——所有权已隔离，`available` 状态的页不许动
+- 不要因为某页 URL 是 `about:blank` 就当垃圾关掉——用户可能正要它
+- 不要杀浏览器进程或结束 Runtime 服务
+- `finish` 报错时不要反复重试、更不要改用杀进程——如实说明残留，让用户手动关
+
+**一个省标签页的技巧**：读登录态 cookie **不需要导航**——`context.cookies(origin)` 直接读。
+为空任务自动创建的隐式页是空白的，正常 `finish` 也会关掉它。
+不要为了读 cookie 去打开目标网站，那会平白多出一个真正的页面标签页。
+
+**未实测分支**：「浏览器原本没开、被本次任务拉起」这一支**没有实测**——上面的处置按官方
+文档语义写（"launching it when necessary"）。遇到这一支时如实告诉用户这是文档依据。
 
 **失败路径**：
 

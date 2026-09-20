@@ -25,8 +25,9 @@ LuzzyPrompt/
 ├── skills/                    配套 skill（按需加载的操作细则，含 21 个 luzzy-roster-*）
 │   ├── README.md                  索引：用途、安装、来源与许可
 │   ├── luzzy-skill-architect/     创建 / 审计 / 融合 Agent Skills（Apache-2.0）
+│   ├── luzzy-aoci-index/          项目认知索引：接手项目必过的认知门（MIT）
 │   ├── luzzy-skill-meihuayishu/   梅花易数技能家族（MIT，自带维护宪章 AGENTS.md）
-│   ├── luzzy-bilibili-notes/      B 站视频转结构化笔记（MIT）
+│   ├── luzzy-bilibili-notes/      B 站视频提取与报告（MIT，默认不落文件）
 │   └── luzzy-zip-password-recovery/  ZIP 压缩包密码恢复（MIT，挂靠 roster-reverse）
 ├── evals/                    门评测层：§1.1.8 覆盖审计 + 回执核验（Python，仅标准库）
 ├── AGENTS.md                  本文件
@@ -78,9 +79,10 @@ LuzzyPrompt/
 | **人设层** | `〇` 节含全部人设要素，且三条边界在位 | 搜「防漂移锚点」/「颜文字白名单」/「行为协议」/「做事协议」/「硬性禁忌」；再搜三条边界：「人设是语气层」/「限于红线之内」/「只管对话输出」。**条数写进了 README**（行为协议 6 / 做事协议 6 / 硬性禁忌 7 / 颜文字 8 类），改完要同步 |
 | 清单 | §1.1 的十七类齐全（每类一个 roster 指向），条数列与各 roster skill 的明细对得上 | 数主表行数（应 17）；再逐个打开被指向的 `skills/luzzy-roster-*/SKILL.md`，核对「条数」列与 skill 内子项表行数一致；改条数时两侧同步 |
 | **设计类子项** | 主清单仍是十七类（子项**往下分裂**，不占顶层）；基线与框架子项的**叠加**关系写清楚 | 数主清单表格行应仍为 17；确认 §1.1.6.1 三行各指向一个 `luzzy-roster-design-*` skill；搜「叠加」确认「基线照读」的说法在位；§14.1 的框架子项纪律与 §1.1 的说法一致 |
-| **清单指向** | §1.1.6 每行指向的 roster skill 路径真实存在 | 逐个 `Test-Path` / `ls` 核对该路径（含 `luzzy-skill-architect` 与 `luzzy-bilibili-notes`） |
+| **清单指向** | §1.1.6 每行指向的 roster skill 路径真实存在 | 逐个 `Test-Path` / `ls` 核对该路径（含 `luzzy-skill-architect`、`luzzy-bilibili-notes` 与 `luzzy-aoci-index`） |
 | **上下文边界** | `prompt/Luzzy.md` **不引用本仓库的维护文档**（本文件、`README.md` 的维护章节） | 搜 `AGENTS.md`：只应出现在 §8.1「读**用户工作区**的规范文件」的语境里；出现「本仓库自带 AGENTS.md」「见 AGENTS.md 第七节」一类指向 → **违规**，必须改成工作区相对表述 |
-| 规则语义 | 「全读 / 超过 4 条取 4」「读 ≠ 装 ≠ 用」「先读后做 + 读取回执」「反假读七条」在位 | 搜关键词 |
+| 规则语义 | 「全读 / 超过 4 条取 4」「读 ≠ 装 ≠ 用」「先读后做 + 读取回执」「反假读八条」在位 | 搜关键词 |
+| **认知索引门** | §1.1.5.1 三段式（命中 / 未接入 / 不适用）+ 认知回执格式齐全；§14.18 的时机表、三个坑位、许可警示在位；导航与 §十二 自查都指向它 | 搜「认知回执」「1.1.5.1」，逐个跳过去看；确认 §1.1.8 那条过门口径**带限定语**（`**「项目接手」另算一道门**` 形式）——**去掉限定语会让 triage-01 误命中，门评测会 FAIL** |
 | **门覆盖** | §1.1.8 触发口径对真实任务说法的词面覆盖 ≥80%，triage / chitchat 零误命中 | `python evals/eval-gate-coverage.py`；漏报优先在 §1.1.8 **只增不删**补同义词，补完重跑；靠改语料消掉漏报不算过 |
 | **分诊条款** | §1.1.5「分诊与 skill 激活」四段（探 / 判 / 激活 / 回写）齐全且内部自洽 | 搜「分诊」，逐个跳过去看；应串成一条完整链路：§0.1 做事协议与快速参考 → 导航铁律与速查表 → §1.1.1 硬门 / §1.1.4 反假读 / §1.1.5 本体四段 / §1.1.8 触发口径 → §二 第 1 步与脚注 → §3.1 技能自寻 → §8.1 与 §8.3 → §十一 播报例外 → §十二 自查 → §十三 第 1 步。**任何一环缺失或章节号改了没跟，就是断链**。指向 §1.1 内部小节的引用一律用 §1.1.x 编号，不写全名定位 |
 | **交叉引用** | 文中所有 `§N.N` 都能找到对应小节；**roster 的行内引用（`luzzy-roster-<slug>`）与实际目录、登记表三方一致** | 把所有 `§` 引用抄出来逐个跳过去看（改章节编号时最容易漏）；再把所有 `luzzy-roster-<slug>` 行内引用抄出来，与 `skills/` 目录名及 `skills/luzzy-roster-family/README.md` 的 slug 表三方比对——更名 roster 时最容易漏 §1.1.8 与 §十四 的行内引用和 family 登记表 |
@@ -88,7 +90,7 @@ LuzzyPrompt/
 | 格式 | 无装饰性 emoji（✅ ⚠ 🚫 三档标记、✗ ✓ 正反例标记豁免）、无裸露分隔线 | 目视 + 搜 `^---$` |
 | **模板语法** | 正文里没有**双花括号变量语法**（连续两个左花括号后接变量名）——DSH 会把 persona 里的它当 prompt 变量引用解析，变量名须匹配 `[a-z][a-z0-9_]*`；**全大写形式**会让预设直接报错 | 已由 `sync-persona.mjs` 自动校验并拒绝（部署前会失败）；手工自查时搜「连续两个左花括号」。占位符统一用 `${...}` |
 | 安全 | 无硬编码密钥形态 | 搜 `sk-` / `ghp_` / `Bearer`（文档里的占位符写法不算） |
-| **skill 校验** | 三个技能各自通过校验 | `validate-trigger.py`（architect、bilibili）；梅花易数跑三条回归命令（见下） |
+| **skill 校验** | 四个技能各自通过校验 | `validate-trigger.py`（architect、bilibili、aoci-index）；梅花易数跑三条回归命令（见下） |
 | **数字** | README 的行数、token、徽章等于实测值 | 第五节命令重测，**每次必做** |
 
 **skills 的校验命令**（改动对应技能后必跑）：
@@ -218,7 +220,7 @@ console.log('逐字节一致:', p.config.prefix.replace(/\n$/,'')===src);
 
 **本机 skill 目录的处置（2026-09-14 清空，2026-09-15 部分恢复）**：`~/.dsh/skills/` 下 19 个 `luzzycode-*` 目录曾在 `b1833cc` 时代手工拷入（18 个子 skill + 编排器），已于 2026-09-14 删除——它们的清单与提示词重复，会让 DSH 继续扫描并暴露给模型。
 
-**恢复时的注意**：本仓库现有 `skills/` 下 25 个技能（21 个 `luzzy-roster-*` + architect / meihuayishu / bilibili / zip-password-recovery），装进任何 harness 的 skill 目录（含 `~/.dsh/skills/`）都会被扫描并常驻在模型可见的技能列表里。**这是有意的**——roster skill 只在命中类目时被读正文，列表里的 description 开销可接受（每个约 100 token，25 个合计约 2.5k）。但它们**不得**被塞进 persona；`sync-persona.mjs` 只嵌 `persona.md`，与 skills 无关。
+**恢复时的注意**：本仓库现有 `skills/` 下 26 个技能（21 个 `luzzy-roster-*` + architect / aoci-index / meihuayishu / bilibili / zip-password-recovery），装进任何 harness 的 skill 目录（含 `~/.dsh/skills/`）都会被扫描并常驻在模型可见的技能列表里。**这是有意的**——roster skill 只在命中类目时被读正文，列表里的 description 开销可接受（每个约 100 token，26 个合计约 2.6k）。但它们**不得**被塞进 persona；`sync-persona.mjs` 只嵌 `persona.md`，与 skills 无关。
 
 **恢复来源**：若要找回更早期的 `luzzycode-*` 版本，见本仓库 git 历史 `0a474c2`（`git show 0a474c2:skills/<名>/SKILL.md`）——那里有全部 **23** 项，比本机部署的 19 项还多（含 reverse / assets / android / mcp）。
 

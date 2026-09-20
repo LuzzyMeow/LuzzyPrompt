@@ -32,9 +32,15 @@ metadata:
 
 | # | 条目 | 读什么 |
 |---|---|---|
-| 1 | **luzzy-bilibili-notes**（本地配套 skill）`skills/luzzy-bilibili-notes/SKILL.md` | 完整正文；`references/` 五个文件与 `scripts/` 两个脚本按需加载 |
+| 1 | **luzzy-bilibili-notes**（本地配套 skill）`skills/luzzy-bilibili-notes/SKILL.md` | 完整正文；`references/` 六个文件与 `scripts/` 两个脚本按需加载 |
 
-默认抓取四项：标题、简介、AI 字幕、全部公开评论（含二级回复）——用户未明确收窄时一律全取（触发口径见提示词 §1.1.8）。风控与合规边界（不批量、不绕 WBI、不碰付费内容）以该 skill 正文与提示词红线为准。
+默认抓取四项：标题、简介、AI 字幕、全部公开评论（含二级回复）——用户未明确收窄时一律全取（触发口径见提示词 §1.1.8）。
+
+**默认产出是对话里的报告，不是文件**：用户没说要不要文件时不新建任何文件；明确要笔记 / 文档 / Markdown 时才落盘（结构照 `references/note-template.md`）。未经要求不新建成品文档是提示词 §7.1 的硬规定。
+
+**收尾要关掉自己的标签页**：走 Tabbit 取登录态时，任务结束执行一次 `finish --discard`——只关任务自有的页，**不碰用户的标签页、不杀浏览器进程**（提示词 §14.16 标签页纪律）。
+
+风控与合规边界（不批量、不绕 WBI、不碰付费内容）以该 skill 正文与提示词红线为准。
 
 ## Examples
 
